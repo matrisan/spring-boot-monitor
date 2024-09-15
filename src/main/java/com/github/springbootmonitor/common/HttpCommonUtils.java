@@ -2,11 +2,14 @@ package com.github.springbootmonitor.common;
 
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
+import org.springframework.stereotype.Component;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -22,8 +25,23 @@ import java.util.List;
  * @version 0.0.1
  * @since 0.0.1
  */
-
+@Component
+@PropertySource(value = "classpath:restTemplate.properties")
 public class HttpCommonUtils {
+
+    private static String csrf;
+    private static String cookie;
+
+    @Value("${waf.X_CSRF_TOKEN}")
+    public void setCsrf(String val){
+        csrf = val;
+    }
+    @Value("${waf.cookie}")
+    public void setCookie(String val){
+        cookie = val;
+    }
+
+
 
     /**
      * 添加内容转换器
@@ -53,8 +71,8 @@ public class HttpCommonUtils {
         headers.add(new BasicHeader("Accept-Language", "zh-CN"));
         headers.add(new BasicHeader("Connection", "Keep-Alive"));
         headers.add(new BasicHeader("content-type", "application/json"));
-        headers.add(new BasicHeader("X-CSRF-TOKEN", "f3da1466-65d4-4f21-9602-780d47d94adb"));
-        headers.add(new BasicHeader("Cookie", "SESSION=NDI3OTlkNmUtMWZlYy00NmQ3LWE5OWYtN2Q0MjBmNjRiMDg3"));
+        headers.add(new BasicHeader("X-CSRF-TOKEN", csrf));
+        headers.add(new BasicHeader("Cookie", cookie));
         return headers;
     }
 

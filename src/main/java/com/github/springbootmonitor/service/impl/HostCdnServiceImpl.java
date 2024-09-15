@@ -5,6 +5,7 @@ import com.github.springbootmonitor.pojo.MongoItemDO;
 import com.github.springbootmonitor.pojo.ResponseRemoteDO;
 import com.github.springbootmonitor.repository.IRemoteHostRepository;
 import com.github.springbootmonitor.service.IHostCdnService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,6 +23,7 @@ import java.util.Map;
  * @since 0.0.1
  */
 
+@Slf4j
 @Service
 public class HostCdnServiceImpl implements IHostCdnService {
 
@@ -34,24 +36,14 @@ public class HostCdnServiceImpl implements IHostCdnService {
         ResponseRemoteDO remoteDO = repository.getRemoteHostByProxy(mappingDO);
         if (remoteDO.getAccess()) {
             Map<String, String> md5map = Collections.singletonMap("cdn", remoteDO.getMd5());
-            return MongoItemDO.builder()
-                    .host(remoteDO.getHost())
-                    .ipSource(remoteDO.getProxy())
-                    .title(remoteDO.getTitle())
-                    .md5(md5map)
-                    .http(itemDO.getHttp())
-                    .accessSource(remoteDO.getAccess())
-                    .desc(remoteDO.getDesc())
-                    .build();
+            Map<String, String> htmlmap = Collections.singletonMap("cdn", remoteDO.getHtml());
+            itemDO.setAccessCdn(remoteDO.getAccess());
+            itemDO.getMd5().putAll(md5map);
+            itemDO.getHtml().putAll(htmlmap);
+            return itemDO;
         } else {
-            return MongoItemDO.builder()
-                    .host(remoteDO.getHost())
-                    .ipSource(itemDO.getIpSource())
-                    .ipCdn(itemDO.getIpCdn())
-                    .ipWaf(itemDO.getIpWaf())
-                    .accessSource(Boolean.FALSE)
-                    .desc(itemDO.getDesc())
-                    .build();
+            itemDO.setAccessCdn(Boolean.FALSE);
+            return itemDO;
         }
     }
 
@@ -62,7 +54,6 @@ public class HostCdnServiceImpl implements IHostCdnService {
                 .http(itemDO.getHttp())
                 .proxy(Collections.singletonList(itemDO.getIpCdn()))
                 .build();
-
     }
 
 

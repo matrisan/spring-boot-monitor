@@ -30,7 +30,7 @@ public class StepWeb2Cdn {
     @Resource(name = "ItemReader2Mongo")
     private ItemReader<MongoItemDO> reader;
 
-    @Resource
+    @Resource(name = "ItemWriterMongo")
     private ItemWriter<MongoItemDO> writer;
 
     @Resource(name = "ItemProcessor2Cdn")
@@ -42,7 +42,7 @@ public class StepWeb2Cdn {
     @Resource
     private StepBuilderFactory stepBuilderFactory;
 
-    @Bean("StepWeb2")
+    @Bean(name = "StepWeb2")
     private Step launcherJobStep2() {
         return stepBuilderFactory.get("launcherJobStep2")
                 .<MongoItemDO, MongoItemDO>chunk(5)

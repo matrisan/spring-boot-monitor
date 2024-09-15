@@ -31,7 +31,7 @@ public class StepWeb1Source {
     @Resource(name = "ItemReader1GridFs")
     private ItemReader<CsvItemDO> reader;
 
-    @Resource
+    @Resource(name = "ItemWriterMongo")
     private ItemWriter<MongoItemDO> writer;
 
     @Resource(name = "ItemProcessor1Source")
@@ -43,7 +43,7 @@ public class StepWeb1Source {
     @Resource
     private StepBuilderFactory stepBuilderFactory;
 
-    @Bean("StepWeb1")
+    @Bean(name = "StepWeb1")
     private Step launcherJobStep1() {
         return stepBuilderFactory.get("launcherJobStep1")
                 .<CsvItemDO, MongoItemDO>chunk(5)

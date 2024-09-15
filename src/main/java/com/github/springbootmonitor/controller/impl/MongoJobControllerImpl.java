@@ -26,7 +26,7 @@ import javax.annotation.Resource;
  */
 
 @RestController
-@Api(value = "启动任务的接口")
+@Api(tags = "启动任务的接口")
 public class MongoJobControllerImpl implements IMongoJobController {
 
     @Resource
@@ -42,6 +42,30 @@ public class MongoJobControllerImpl implements IMongoJobController {
     })
     public ResultDO<String> runJob(@PathVariable("collection") String collection) {
         return service.runJob(collection);
+    }
+
+    @Override
+    @GetMapping("/waf/job/{collection}")
+    @ApiOperation(value = "添加Waf域名任务", httpMethod = "GET", notes = "添加Waf域名任务")
+    @ApiImplicitParam(name = "collection", value = "传入文件的名称", required = true, dataType = "String", paramType = "path")
+    @ApiResponses({
+            @ApiResponse(code = 403, message = "禁止访问"),
+            @ApiResponse(code = 404, message = "获取为空")
+    })
+    public ResultDO<String> runWafJob(@PathVariable("collection") String collection) {
+        return service.runWafJob(collection);
+    }
+
+    @Override
+    @GetMapping("/waf/job/del/{collection}")
+    @ApiOperation(value = "批量删除域名配置任务", httpMethod = "GET", notes = "批量删除域名配置")
+    @ApiResponses({
+            @ApiResponse(code = 403, message = "禁止访问"),
+            @ApiResponse(code = 404, message = "获取为空")
+    })
+    @ApiImplicitParam(name = "collection", value = "传入文件的名称", required = true, dataType = "String", paramType = "path")
+    public ResultDO<String> delHostJob(@PathVariable("collection") String collection) {
+        return service.runWafDelJob(collection);
     }
 
 }

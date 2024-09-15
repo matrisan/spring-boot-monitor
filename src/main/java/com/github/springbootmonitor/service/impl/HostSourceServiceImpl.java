@@ -7,6 +7,7 @@ import com.github.springbootmonitor.pojo.MongoItemDO;
 import com.github.springbootmonitor.pojo.ResponseRemoteDO;
 import com.github.springbootmonitor.repository.IRemoteHostRepository;
 import com.github.springbootmonitor.service.IHostSourceService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ import java.util.Map;
  * @version 0.0.1
  * @since 0.0.1
  */
+@Slf4j
 @Service
 public class HostSourceServiceImpl implements IHostSourceService {
 
@@ -36,13 +38,19 @@ public class HostSourceServiceImpl implements IHostSourceService {
         ResponseRemoteDO remoteDO = repository.getRemoteHostByProxy(mappingDO);
         if (remoteDO.getAccess()) {
             Map<String, String> md5map = Collections.singletonMap("source", remoteDO.getMd5());
+            Map<String, String> htmlmap = Collections.singletonMap("source", remoteDO.getHtml());
             return MongoItemDO.builder()
                     .host(remoteDO.getHost())
                     .ipSource(remoteDO.getProxy())
+                    .ipCdn(itemDO.getIpCdn())
+                    .ipWaf(itemDO.getIpWaf())
                     .title(remoteDO.getTitle())
                     .md5(md5map)
+                    .html(htmlmap)
                     .http(itemDO.getHttp())
                     .accessSource(remoteDO.getAccess())
+//                    // 暂时先绕过cdn访问
+//                    .accessCdn(Boolean.TRUE)
                     .desc(remoteDO.getDesc())
                     .build();
         } else {
@@ -51,6 +59,7 @@ public class HostSourceServiceImpl implements IHostSourceService {
                     .ipSource(itemDO.getIpSource())
                     .ipCdn(itemDO.getIpCdn())
                     .ipWaf(itemDO.getIpWaf())
+                    .http(itemDO.getHttp())
                     .accessSource(Boolean.FALSE)
                     .desc(itemDO.getDesc())
                     .build();
@@ -67,13 +76,5 @@ public class HostSourceServiceImpl implements IHostSourceService {
         mappingDO.setHttp(itemDO.getHttp());
         return mappingDO;
     }
-
-//    public MongoItemDO getRemoteInfoByCdn(CsvItemDO itemDO){
-//
-//    }
-//
-
-
-
 
 }

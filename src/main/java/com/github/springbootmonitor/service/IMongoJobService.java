@@ -23,4 +23,18 @@ public interface IMongoJobService {
      */
     ResultDO<String> runJob(String collection);
 
+    /**
+     * 返回Waf域名批量添加的执行状态
+     * @param collection   文件名
+     * @return ResultDO
+     */
+    ResultDO<String> runWafJob(String collection);
+
+    /**
+     * 返回waf域名批量删除的执行状态
+     * @param collection 文件名
+     * @return ResultDO
+     */
+    ResultDO<String> runWafDelJob(String collection);
+
 }

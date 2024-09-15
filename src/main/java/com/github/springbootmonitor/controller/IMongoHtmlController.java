@@ -20,4 +20,18 @@ public interface IMongoHtmlController {
      */
     String index();
 
+    /**
+     * waf 文件上传网页
+     * @return String
+     */
+    String wafUpload();
+
+    /**
+     * 根据网站域名比较网站内容
+     * @param collection 集合
+     * @param webHost  网站域名
+     * @return  String
+     */
+    String websiteDiff(String collection, String webHost);
+
 }
